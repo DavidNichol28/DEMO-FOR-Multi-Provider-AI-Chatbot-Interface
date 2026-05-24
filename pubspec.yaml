@@ -1,0 +1,25 @@
+# pubspec.yaml
+
+name: chatroom_launcher
+description: ChatRoom launcher with runtime API key entry
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_riverpod: ^2.5.1
+
+  # chat_room: ^0.0.1
+  chat_room: 
+    path: ../../modules/chat_room
+
+  nichol_ui_lib_input_handler: ^0.0.1
+
+flutter:
+  uses-material-design: true

@@ -1,0 +1,199 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:chat_room/chat_room.dart'
+
+import 'package:nichol_ui_lib_input_handler/nichol_ui_lib_input_handler.dart';
+
+void main() {
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
+}
+
+final anthropicKeyProvider = StateProvider<String>((ref) => '');
+final googleKeyProvider = StateProvider<String>((ref) => '');
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ChatRoom Launcher',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: const LauncherPage(),
+    );
+  }
+}
+
+class LauncherPage extends ConsumerStatefulWidget {
+  const LauncherPage({super.key});
+
+  @override
+  ConsumerState<LauncherPage> createState() => _LauncherPageState();
+}
+
+class _LauncherPageState extends ConsumerState<LauncherPage> {
+  bool initialized = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final anthropicKey = ref.watch(anthropicKeyProvider);
+    final googleKey = ref.watch(googleKeyProvider);
+
+    final hasAtLeastOneKey =
+        anthropicKey.isNotEmpty || googleKey.isNotEmpty;
+
+    if (initialized) {
+      return ChatRoom(
+        apiKeys: {
+          "Anthropic": anthropicKey,
+          "Google": googleKey,
+        },
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("ChatRoom Launcher"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "API Key Status",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Text(
+              anthropicKey.isEmpty
+                  ? "Anthropic Key: NOT SET"
+                  : "Anthropic Key: SET",
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              googleKey.isEmpty
+                  ? "Google Key: NOT SET"
+                  : "Google Key: SET",
+            ),
+
+            const SizedBox(height: 32),
+
+
+
+
+
+
+
+
+
+
+
+const Text(
+  "Anthropic API Key",
+  style: TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  ),
+),
+
+const SizedBox(height: 8),
+
+NicholUILibInputHandler(
+  onSend: (value) {
+    ref.read(anthropicKeyProvider.notifier).state =
+        value.trim();
+  },
+),
+
+const SizedBox(height: 8),
+
+ElevatedButton(
+  onPressed: () {
+    ref.read(anthropicKeyProvider.notifier).state = '';
+  },
+  child: const Text("Clear Anthropic Key"),
+),
+
+const SizedBox(height: 24),
+
+const Text(
+  "Google API Key",
+  style: TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  ),
+),
+
+const SizedBox(height: 8),
+
+NicholUILibInputHandler(
+  onSend: (value) {
+    ref.read(googleKeyProvider.notifier).state =
+        value.trim();
+  },
+),
+
+const SizedBox(height: 8),
+
+ElevatedButton(
+  onPressed: () {
+    ref.read(googleKeyProvider.notifier).state = '';
+  },
+  child: const Text("Clear Google Key"),
+),
+
+
+
+
+
+
+
+
+
+
+
+
+
+            const SizedBox(height: 40),
+
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: hasAtLeastOneKey
+                    ? () {
+                        setState(() {
+                          initialized = true;
+                        });
+                      }
+                    : null,
+                child: const Text(
+                  "Initialize Chat",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
